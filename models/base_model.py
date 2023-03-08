@@ -57,11 +57,9 @@ class BaseModel:
         - created_at and updated_at is converted to string object in ISO format
         """
         result = {**self.__dict__}
-        result = {**self.__dict__}
         if isinstance(result["created_at"], datetime):
             result["created_at"] = result["created_at"].isoformat()
         if isinstance(result["updated_at"], datetime):
             result["updated_at"] = result["updated_at"].isoformat()
         result['__class__'] = self.__class__.__name__
-        return result
         return result
