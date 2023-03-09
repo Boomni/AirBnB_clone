@@ -5,6 +5,7 @@ Module that contains the entry point of the command interpreter
 import cmd
 from models.base_model import BaseModel
 from models import storage
+from models.user import User
 
 
 class HBNBCommand(cmd.Cmd):
@@ -12,7 +13,8 @@ class HBNBCommand(cmd.Cmd):
     HBNBCommand class that inherits from cmd.Cmd class
     """
     prompt = "(hbnb) "
-    class_instructions = {"BaseModel": BaseModel}
+    class_instructions = {"BaseModel": BaseModel,
+                          "User": User}
 
     def do_quit(self, arg):
         """Quit command to exit the program
