@@ -6,6 +6,11 @@ import cmd
 from models.base_model import BaseModel
 from models import storage
 from models.user import User
+from models.state import State
+from models.city import City
+from models.amenity import Amenity
+from models.place import Place
+from models.review import Review
 
 
 class HBNBCommand(cmd.Cmd):
@@ -14,7 +19,12 @@ class HBNBCommand(cmd.Cmd):
     """
     prompt = "(hbnb) "
     class_instructions = {"BaseModel": BaseModel,
-                          "User": User}
+                          "User": User,
+                          "State": State,
+                          "City": City,
+                          "Amenity": Amenity,
+                          "Place": Place,
+                          "Review": Review}
 
     def do_quit(self, arg):
         """Quit command to exit the program
@@ -121,9 +131,6 @@ class HBNBCommand(cmd.Cmd):
             print("** instance id missing **")
         else:
             obj_id = args[0] + "." + args[1]
-            obj_attribute_key = args[0] + "." + args[2]
-            obj_attribute_value = args[3]
-            not_accepted = ["id", "created_at", "updated_at"]
             obj_dict = storage.all()
             if obj_id not in obj_dict:
                 print("** no instances found **")
@@ -134,10 +141,13 @@ class HBNBCommand(cmd.Cmd):
             elif len(args) > 4:
                 pass
             else:
+                not_accepted = ["id", "created_at", "updated_at"]
+                obj_attr_value = args[3]
+                obj_attr_key = args[0] + "." + args[2]
                 if args[2] in not_accepted:
                     pass
                 else:
-                    obj_dict[obj_id].__dict__[obj_attribute_key] = obj_attribute_value
+                    obj_dict[obj_id].__dict__[obj_attr_key] = obj_attr_value
                     obj_dict[obj_id].save()
 
 
