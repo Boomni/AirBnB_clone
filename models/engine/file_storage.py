@@ -8,7 +8,8 @@ from models.base_model import BaseModel
 
 class FileStorage:
     """
-    FileStorage class serializes instances to a JSON file and deserializes JSON file to instances
+    FileStorage class serializes instances to a JSON file and
+    deserializes JSON file to instances
     """
 
     __file_path = "file.json"
@@ -24,7 +25,7 @@ class FileStorage:
         """
         Sets in __objects the obj with key <obj class name>.id
         """
-        key = obj.__class__.__name__ + "." + obj.id
+        key = "{}.{}".format(obj.__class__.__name__, obj.id)
         FileStorage.__objects[key] = obj
 
     def save(self):
@@ -48,5 +49,5 @@ class FileStorage:
                     cls = key.split(".")[0]
                     obj = eval(cls)(**value)
                     FileStorage.__objects[key] = obj
-        except:
+        except (IOError, json.JSONDecodeError) as e:
             pass
