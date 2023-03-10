@@ -1,5 +1,5 @@
 # AirBnB Clone ― The console
-
+---
 ## Project Description
 
 >> The Console project is an assignment given as part of the Alx Africa Software Engineering course. 
@@ -18,7 +18,7 @@
 - A website (front-end) with static and dynamic functionalities
 - A comprehensive database to manage the backend functionalities
 - An API that provides a communication interface between the front and backend of the system.
-
+---
 ### Files and Directories
 - ```models``` directory will contain all classes used for the entire project. A class, called “model” in a OOP project is the representation of an object/instance.
 - ```tests``` directory will contain all unit tests.
@@ -36,7 +36,7 @@
 - Creating an abstracted storage engine for file storage.
 - Writing unit tests to validate all classes and storage engines.
 - Creating a command interpreter in Python using the cmd module.
-
+---
 ## Description of the command interpreter
 ### General Use
 
@@ -107,3 +107,9 @@ EOF  help  quit
 (hbnb)
 $
 ```
+---
+## Authors
+
+- IZIREN ABIOLA JOSEPH <jospaco2001@yahoo.com>
+- Jonthan Boomni <rejoiceoye1@gmail.com>
+---
