@@ -150,36 +150,45 @@ class HBNBCommand(cmd.Cmd):
                     obj_dict[obj_id].__dict__[obj_attr_key] = obj_attr_value
                     obj_dict[obj_id].save()
 
-    def default(self, arg):
-        """Split the user input into parts
+    def default(self, line):
         """
-        args = arg.strip().split('.')
-        result = []
-        obj_dict = storage.all()
-        if len(args) == 2 and args[1] == 'all()':
-            for key, value in obj_dict.items():
-                if value.__class__.__name__ == args[0]:
-                    result.append(str(value))
-            print(result)
-        elif len(args) == 2 and args[1] == 'count()':
-            for key, value in obj_dict.items():
-                if value.__class__.__name__ == args[0]:
-                    result.append(str(value))
-            print(len(result))
-        elif len(args) == 2 and args[1][:4] == 'show':
-            obj_id = args[0] + "." + args[1][6:-2]
-            if obj_id in obj_dict:
-                print(obj_dict[obj_id])
-            else:
-                print("** no instance found **")
-        elif len(args) == 2 and args[1][:7] == 'destroy':
-             obj_id = args[0] + "." + args[1][9:-2]
-             if obj_id in obj_dict:
-                 del obj_dict[obj_id]
-             else:
-                 print("** no instance found **")
+        Overriding the default method to handle <class_name>.command()
+        """
+        class_name, sep, command = line.partition('.')
+        if sep == '.' and command == 'all()':
+            self.do_all(class_name)
+        elif sep == "." and command == "count()":
+            self.do_count(class_name)
+        elif sep == "." and command[:5] == "show(":
+            extracted_id = command[6:-2]
+            show_message = "{} {}".format(class_name, extracted_id)
+            self.do_show(show_message)
+        elif sep == "." and command[:8] == "destroy(":
+            extracted_id = command[9:-2]
+            destroy_message = "{} {}".format(class_name, extracted_id)
+            self.do_destroy(destroy_message)
         else:
-            print("*** unknown syntax: {}".format(arg))
+            print('*** Unknown syntax:', line)
+
+    def do_count(self, arg):
+        """Retrieve the number of instances of a class"""
+        args = arg.split()
+        if len(args) == 0:
+            print("** class name missing **")
+            return
+        try:
+            count = 0
+            obj_dict = storage.all()
+            for key, value in obj_dict.items():
+                if not arg:
+                    result.append(str(value))
+                else:
+                    if value.__class__.__name__ == args[0]:
+                        count += 1
+            print(count)
+        except NameError:
+            print("** class doesn't exist **")
+
 
 if __name__ == '__main__':
     HBNBCommand().cmdloop()
