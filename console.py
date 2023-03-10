@@ -177,11 +177,11 @@ class HBNBCommand(cmd.Cmd):
                 pass
             else:
                 not_accepted = ["id", "created_at", "updated_at"]
-                obj_attr_value = eval(args[3])
-                obj_attr_key = args[2][1:-1]
                 if args[2] in not_accepted:
                     pass
                 else:
+                    obj_attr_value = eval(args[3])
+                    obj_attr_key = args[2][1:-1]
                     obj_dict[obj_id].__dict__[obj_attr_key] = obj_attr_value
                     obj_dict[obj_id].save()
 
