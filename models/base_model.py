@@ -65,3 +65,11 @@ class BaseModel:
             result["updated_at"] = result["updated_at"].isoformat()
         result['__class__'] = self.__class__.__name__
         return result
+
+    @classmethod
+    def all(cls):
+        """
+        Returns a list of all instances of the current class
+        """
+        obj_dict = storage.all()
+        return [obj for obj in obj_dict.values() if isinstance(obj, cls)]

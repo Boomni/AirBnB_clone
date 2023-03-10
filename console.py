@@ -150,6 +150,36 @@ class HBNBCommand(cmd.Cmd):
                     obj_dict[obj_id].__dict__[obj_attr_key] = obj_attr_value
                     obj_dict[obj_id].save()
 
+    def default(self, arg):
+        """Split the user input into parts
+        """
+        args = arg.strip().split('.')
+        result = []
+        obj_dict = storage.all()
+        if len(args) == 2 and args[1] == 'all()':
+            for key, value in obj_dict.items():
+                if value.__class__.__name__ == args[0]:
+                    result.append(str(value))
+            print(result)
+        elif len(args) == 2 and args[1] == 'count()':
+            for key, value in obj_dict.items():
+                if value.__class__.__name__ == args[0]:
+                    result.append(str(value))
+            print(len(result))
+        elif len(args) == 2 and args[1][:4] == 'show':
+            obj_id = args[0] + "." + args[1][6:-2]
+            if obj_id in obj_dict:
+                print(obj_dict[obj_id])
+            else:
+                print("** no instance found **")
+        elif len(args) == 2 and args[1][:7] == 'destroy':
+             obj_id = args[0] + "." + args[1][9:-2]
+             if obj_id in obj_dict:
+                 del obj_dict[obj_id]
+             else:
+                 print("** no instance found **")
+        else:
+            print("*** unknown syntax: {}".format(arg))
 
 if __name__ == '__main__':
     HBNBCommand().cmdloop()
