@@ -143,8 +143,8 @@ class HBNBCommand(cmd.Cmd):
                 pass
             else:
                 not_accepted = ["id", "created_at", "updated_at"]
-                obj_attr_value = args[3]
-                obj_attr_key = args[0] + "." + args[2]
+                obj_attr_value = eval(args[3])
+                obj_attr_key = args[2][1:-1]
                 if args[2] in not_accepted:
                     pass
                 else:
@@ -169,15 +169,15 @@ class HBNBCommand(cmd.Cmd):
             destroy_message = "{} {}".format(class_name, extracted_id)
             self.do_destroy(destroy_message)
         elif sep == '.' and command[:7] == "update(":
-            pattern = r'^(\w+)\.(\w+)\("(\w+)",\s*"(\w+)",\s*(\w+)\)$'
-            s = line
-            match = re.match(pattern, s)
-            class_name = match.group(1)
-            cmd = match.group(2)
-            class_id = match.group(3)
-            attr_key = match.group(4)
-            attr_value = match.group(5)
-            print(class_name, cmd, class_id, attr_key, attr_value)
+            arguments = command[7:-1].strip().split(",")
+            id_val = arguments[0][1:-1]
+            obj_attr_key = arguments[1]
+            obj_attr_value = arguments[2]
+            update_message = "{} {} {} {}".format(class_name,
+                                                  id_val,
+                                                  obj_attr_key,
+                                                  obj_attr_value)
+            self.do_update(update_message)
         else:
             print('*** Unknown syntax:', line)
 
