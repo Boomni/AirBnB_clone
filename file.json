@@ -1,1 +1,1 @@
-{"BaseModel.4a6457aa-88c9-4a79-bad5-f77cd31a5dd4": {"id": "4a6457aa-88c9-4a79-bad5-f77cd31a5dd4", "created_at": "2023-03-10T22:03:35.584144", "updated_at": "2023-03-10T22:03:35.584229", "__class__": "BaseModel"}, "User.785e0c09-757c-4e5b-b860-8985f87c5fb8": {"id": "785e0c09-757c-4e5b-b860-8985f87c5fb8", "created_at": "2023-03-10T22:03:45.239979", "updated_at": "2023-03-10T23:01:10.041107", "\"age\"": "34", "ge": "34", "page": "89", "pag": "89", "site": "www.facebook.com", "first_name": "John", "age": 67, "__class__": "User"}}
+{}
