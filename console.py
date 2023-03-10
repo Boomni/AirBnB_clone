@@ -11,6 +11,7 @@ from models.city import City
 from models.amenity import Amenity
 from models.place import Place
 from models.review import Review
+import re
 
 
 class HBNBCommand(cmd.Cmd):
@@ -167,6 +168,16 @@ class HBNBCommand(cmd.Cmd):
             extracted_id = command[9:-2]
             destroy_message = "{} {}".format(class_name, extracted_id)
             self.do_destroy(destroy_message)
+        elif sep == '.' and command[:7] == "update(":
+            pattern = r'^(\w+)\.(\w+)\("(\w+)",\s*"(\w+)",\s*(\w+)\)$'
+            s = line
+            match = re.match(pattern, s)
+            class_name = match.group(1)
+            cmd = match.group(2)
+            class_id = match.group(3)
+            attr_key = match.group(4)
+            attr_value = match.group(5)
+            print(class_name, cmd, class_id, attr_key, attr_value)
         else:
             print('*** Unknown syntax:', line)
 
