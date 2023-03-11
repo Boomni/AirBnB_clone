@@ -25,40 +25,6 @@ class HBNBCommand(cmd.Cmd):
                           "Amenity": Amenity,
                           "Place": Place,
                           "Review": Review}
-    class_attributes = {
-            "BaseModel":
-                     {"id": str,
-                      "created_at": datetime.datetime,
-                      "updated_at": datetime.datetime},
-            "User":
-                     {"email": str,
-                      "password": str,
-                      "first_name": str,
-                      "last_name": str},
-            "State":
-                     {"name": str},
-            "City":
-                     {"state_id": str,
-                      "name": str},
-            "Amenity":
-                     {"name": str},
-            "Place":
-                     {"city_id": str,
-                      "user_id": str,
-                      "name": str,
-                      "description": str,
-                      "number_rooms": int,
-                      "number_bathrooms": int,
-                      "max_guest": int,
-                      "price_by_night": int,
-                      "latitude": float,
-                      "longitude": float,
-                      "amenity_ids": list},
-            "Review":
-                     {"place_id": str,
-                      "user_id": str,
-                      "text": str}
-        }
 
     def do_quit(self, arg):
         """Quit command to exit the program
@@ -164,7 +130,8 @@ class HBNBCommand(cmd.Cmd):
         elif len(args) < 2:
             print("** instance id missing **")
         else:
-            obj_id = args[0] + "." + args[1]
+            obj_id = args[1]
+            obj_key = args[0] + "." + obj_id
             obj_dict = storage.all()
             if obj_id not in obj_dict:
                 print("** no instances found **")
@@ -181,8 +148,15 @@ class HBNBCommand(cmd.Cmd):
                 else:
                     obj_attr_value = eval(args[3])
                     obj_attr_key = args[2][1:-1]
-                    obj_dict[obj_id].__dict__[obj_attr_key] = obj_attr_value
-                    obj_dict[obj_id].save()
+                    class_dict_key  = args[0] + "." + obj_attr_key
+                    try:
+                        obj_attr_type = type(getattr(obj_dict[obj_id], obj_attr_key))
+                        if isinstance(obj_attr_value, obj_attr_type):
+                            setattr(obj_dict[obj_id], obj_attr_key, obj_attr_value)
+                            obj_dict[obj_id].save()
+                    except AttributeError:
+                        print("'{}' object has no attribute '{}'".format(args[0], args[2][1:-1]))
+
 
     def default(self, line):
         """
@@ -202,7 +176,21 @@ class HBNBCommand(cmd.Cmd):
             destroy_message = "{} {}".format(class_name, extracted_id)
             self.do_destroy(destroy_message)
         elif sep == '.' and command[:7] == "update(":
-            arguments = command[7:-1].strip().split(",")
+            try:
+                arguments = command[7:-1].strip().split(",")
+            except:
+                print('*** Unknown syntax:', line)
+                return
+            #if len(arguments) > 3:
+            #    elif type(eval(argl[2])) == dict:
+            #obj = objdict["{}.{}".format(argl[0], argl[1])]
+            #for k, v in eval(argl[2]).items():
+            #    if (k in obj.__class__.__dict__.keys() and
+            #            type(obj.__class__.__dict__[k]) in {str, int, float}):
+            #        valtype = type(obj.__class__.__dict__[k])
+            #        obj.__dict__[k] = valtype(v)
+            #    else:
+            #        obj.__dict__[k] = v
             id_val = arguments[0][1:-1]
             obj_attr_key = arguments[1]
             obj_attr_value = arguments[2]
