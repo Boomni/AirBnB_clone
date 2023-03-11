@@ -46,7 +46,8 @@ class HBNBCommand(cmd.Cmd):
         """
         Creates a new instance of BaseModel, saves it to JSON file,
         and prints the id
-        Eg: $ create BaseModel
+        Usage: create <class name>
+            Eg: $ create BaseModel
         """
         if not arg:
             print("** class name missing **")
@@ -61,7 +62,8 @@ class HBNBCommand(cmd.Cmd):
         """
         Prints the string representation of an instance
         based on the class name and id.
-        Eg: $ show BaseModel 1234-1234-1234
+        Usage: show <class name> <class id>
+            Eg: $ show BaseModel 1234-1234-1234
         """
         args = arg.split()
         if not args:
@@ -82,7 +84,8 @@ class HBNBCommand(cmd.Cmd):
         """
         Deletes an instance based on the class name and id
         (save the change into the JSON file).
-        Eg: $ destroy BaseModel 1234-1234-1234
+        Usage: destroy <class_name> <class id>
+            Eg: $ destroy BaseModel 1234-1234-1234
         """
         args = arg.split()
         if not args:
@@ -104,7 +107,9 @@ class HBNBCommand(cmd.Cmd):
         """
         Prints all string representation of all instances
         based on or not on the class name.
-        Ex: $ all BaseModel or $ all.
+        Usage: all <class_name> or all
+            Eg: $ all BaseModel
+                $ all
         """
         result = []
         obj_dict = storage.all()
@@ -120,7 +125,9 @@ class HBNBCommand(cmd.Cmd):
         """
         Updates an instance based on the class name and id
         by adding or updating attribute (save the change into the JSON file)
-        Ex: $ update BaseModel 1234-1234-1234 email "aibnb@mail.com"
+        Usage: update <class name> <id> <attribute name> "<attribute value>"
+        Eg: $ update BaseModel 1234-1234-1234 email "aibnb@mail.com"
+            $ update Place 1234-1234-1234 max_guest 34
         """
         args = arg.split()
         if not args:
@@ -133,30 +140,34 @@ class HBNBCommand(cmd.Cmd):
             obj_id = args[1]
             obj_key = args[0] + "." + obj_id
             obj_dict = storage.all()
-            if obj_id not in obj_dict:
-                print("** no instances found **")
+            if obj_key not in obj_dict:
+                print("** no instance found **")
             elif len(args) < 3:
                 print("** attribute name missing **")
             elif len(args) < 4:
                 print("** value missing **")
-            elif len(args) > 4:
-                pass
             else:
-                not_accepted = ["id", "created_at", "updated_at"]
-                if args[2] in not_accepted:
-                    pass
+                obj = obj_dict[obj_key]
+                if args[2][0] == '{' and args[-1][-1] == '}':
+                    # dictionary representation
+                    new_attrs = eval(" ".join(args[2:]))
+                    if type(new_attrs) == dict:
+                        for k, v in new_attrs.items():
+                            if hasattr(obj, k):
+                                v = type(getattr(obj, k))(v)
+                                setattr(obj, k, v)
+                        obj.save()
+                    else:
+                        print("** invalid format for dictionary representation **")
                 else:
-                    obj_attr_value = eval(args[3])
-                    obj_attr_key = args[2][1:-1]
-                    class_dict_key  = args[0] + "." + obj_attr_key
-                    try:
-                        obj_attr_type = type(getattr(obj_dict[obj_id], obj_attr_key))
-                        if isinstance(obj_attr_value, obj_attr_type):
-                            setattr(obj_dict[obj_id], obj_attr_key, obj_attr_value)
-                            obj_dict[obj_id].save()
-                    except AttributeError:
-                        print("'{}' object has no attribute '{}'".format(args[0], args[2][1:-1]))
-
+                    # attribute name and value
+                    attr_name = args[2]
+                    if hasattr(obj, attr_name):
+                        attr_value = type(getattr(obj, attr_name))(args[3])
+                        setattr(obj, attr_name, attr_value)
+                        obj.save()
+                    else:
+                        print("'{}' object has no attribute '{}'".format(args[0], attr_name))
 
     def default(self, line):
         """
@@ -176,29 +187,32 @@ class HBNBCommand(cmd.Cmd):
             destroy_message = "{} {}".format(class_name, extracted_id)
             self.do_destroy(destroy_message)
         elif sep == '.' and command[:7] == "update(":
-            try:
+            if command[-2] == "}" and "{" in command:
+                obj_id, sep, attr_dict = command.strip().partition(",")
+                id_val = obj_id[8:-1]
+                attr_dict = eval(attr_dict[:-1].lstrip())
+                if attr_dict == -1:
+                    print("** invalid format for dictionary representation **")
+                    return
+                for key, value in attr_dict.items():
+                    update_message = "{} {} {} {}".format(class_name,
+                                                          id_val,
+                                                          str(key),
+                                                          value)
+                    print(update_message)
+                    self.do_update(update_message)
+            elif "{" not in command:
                 arguments = command[7:-1].strip().split(",")
-            except:
+                id_val = arguments[0][1:-1]
+                obj_attr_key = arguments[1]
+                obj_attr_value = arguments[2]
+                update_message = "{} {} {} {}".format(class_name,
+                                                      id_val,
+                                                      obj_attr_key,
+                                                      obj_attr_value)
+                self.do_update(update_message)
+            else:
                 print('*** Unknown syntax:', line)
-                return
-            #if len(arguments) > 3:
-            #    elif type(eval(argl[2])) == dict:
-            #obj = objdict["{}.{}".format(argl[0], argl[1])]
-            #for k, v in eval(argl[2]).items():
-            #    if (k in obj.__class__.__dict__.keys() and
-            #            type(obj.__class__.__dict__[k]) in {str, int, float}):
-            #        valtype = type(obj.__class__.__dict__[k])
-            #        obj.__dict__[k] = valtype(v)
-            #    else:
-            #        obj.__dict__[k] = v
-            id_val = arguments[0][1:-1]
-            obj_attr_key = arguments[1]
-            obj_attr_value = arguments[2]
-            update_message = "{} {} {} {}".format(class_name,
-                                                  id_val,
-                                                  obj_attr_key,
-                                                  obj_attr_value)
-            self.do_update(update_message)
         else:
             print('*** Unknown syntax:', line)
 
