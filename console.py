@@ -163,7 +163,7 @@ class HBNBCommand(cmd.Cmd):
                     # attribute name and value
                     attr_name = args[2]
                     if hasattr(obj, attr_name):
-                        attr_value = type(getattr(obj, attr_name))(args[3])
+                        attr_value = type(getattr(obj, attr_name))(args[3][1:-1])
                         setattr(obj, attr_name, attr_value)
                         obj.save()
                     else:
@@ -178,15 +178,19 @@ class HBNBCommand(cmd.Cmd):
             self.do_all(class_name)
         elif sep == "." and command == "count()":
             self.do_count(class_name)
-        elif sep == "." and command[:5] == "show(":
+        elif sep == "." and command[:5] == "show(" and command[-1] == ")":
             extracted_id = command[6:-2]
+            if extracted_id[1:] == "\"" and extracted_id[:-1] == "\"":
+                extracted_id = extracted_id[1:-1]
             show_message = "{} {}".format(class_name, extracted_id)
             self.do_show(show_message)
-        elif sep == "." and command[:8] == "destroy(":
+        elif sep == "." and command[:8] == "destroy(" and command[-1] == ")":
             extracted_id = command[9:-2]
+            if extracted_id[1:] == "\"" and extracted_id[:-1] == "\"":
+                extracted_id = extracted_id[1:-1]
             destroy_message = "{} {}".format(class_name, extracted_id)
             self.do_destroy(destroy_message)
-        elif sep == '.' and command[:7] == "update(":
+        elif sep == '.' and command[:7] == "update(" and command[-1] == ")":
             if command[-2] == "}" and "{" in command:
                 obj_id, sep, attr_dict = command.strip().partition(",")
                 id_val = obj_id[8:-1]
@@ -208,7 +212,7 @@ class HBNBCommand(cmd.Cmd):
                 obj_attr_value = arguments[2]
                 update_message = "{} {} {} {}".format(class_name,
                                                       id_val,
-                                                      obj_attr_key,
+                                                      obj_attr_key[2:-1],
                                                       obj_attr_value)
                 self.do_update(update_message)
             else:
