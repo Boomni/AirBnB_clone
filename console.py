@@ -73,10 +73,10 @@ class HBNBCommand(cmd.Cmd):
         elif len(args) < 2:
             print("** instance id missing **")
         else:
-            obj_id = args[0] + "." + args[1]
+            obj_key = args[0] + "." + args[1]
             obj_dict = storage.all()
-            if obj_id in obj_dict:
-                print(obj_dict[obj_id])
+            if obj_key in obj_dict:
+                print(obj_dict[obj_key])
             else:
                 print("** no instance found **")
 
@@ -95,10 +95,10 @@ class HBNBCommand(cmd.Cmd):
         elif len(args) < 2:
             print("** instance id missing **")
         else:
-            obj_id = args[0] + "." + args[1]
+            obj_key = args[0] + "." + args[1]
             obj_dict = storage.all()
-            if obj_id in obj_dict:
-                del obj_dict[obj_id]
+            if obj_key in obj_dict:
+                del obj_dict[obj_key]
                 storage.save()
             else:
                 print("** no instance found **")
@@ -111,15 +111,20 @@ class HBNBCommand(cmd.Cmd):
             Eg: $ all BaseModel
                 $ all
         """
-        result = []
+        string_list = []
         obj_dict = storage.all()
-        for key, value in obj_dict.items():
-            if not arg:
-                result.append(str(value))
+        if not arg:
+            for key, value in obj_dict.items():
+                string_list.append(str(value))
+        else:
+            if arg not in HBNBCommand.class_instructions:
+                print("** class doesn't exist **")
+                return
             else:
-                if value.__class__.__name__ == arg:
-                    result.append(str(value))
-        print(result)
+                for key, value in obj_dict.items():
+                    if value.__class__.__name__ == arg:
+                        string_list.append(str(value))
+        print(string_list)
 
     def do_update(self, arg):
         """
@@ -137,8 +142,7 @@ class HBNBCommand(cmd.Cmd):
         elif len(args) < 2:
             print("** instance id missing **")
         else:
-            obj_id = args[1]
-            obj_key = args[0] + "." + obj_id
+            obj_key = args[0] + "." + args[1]
             obj_dict = storage.all()
             if obj_key not in obj_dict:
                 print("** no instance found **")
@@ -147,27 +151,25 @@ class HBNBCommand(cmd.Cmd):
             elif len(args) < 4:
                 print("** value missing **")
             else:
+                not_accepted = ["id", "created_at", "updated_at"]
                 obj = obj_dict[obj_key]
                 if args[2][0] == '{' and args[-1][-1] == '}':
-                    # dictionary representation
                     new_attrs = eval(" ".join(args[2:]))
                     if type(new_attrs) == dict:
                         for k, v in new_attrs.items():
-                            if hasattr(obj, k):
-                                v = type(getattr(obj, k))(v)
-                                setattr(obj, k, v)
+                            setattr(obj, k, v)
                         obj.save()
                     else:
-                        print("** invalid format for dictionary representation **")
+                        print("** invalid format for "
+                              "dictionary representation **")
                 else:
-                    # attribute name and value
-                    attr_name = args[2]
-                    if hasattr(obj, attr_name):
-                        attr_value = type(getattr(obj, attr_name))(args[3][1:-1])
+                    attr_name = args[2][1:-1]
+                    attr_value = eval(args[3])
+                    if args[2] in not_accepted:
+                        pass
+                    else:
                         setattr(obj, attr_name, attr_value)
                         obj.save()
-                    else:
-                        print("'{}' object has no attribute '{}'".format(args[0], attr_name))
 
     def default(self, line):
         """
@@ -196,23 +198,23 @@ class HBNBCommand(cmd.Cmd):
                 id_val = obj_id[8:-1]
                 attr_dict = eval(attr_dict[:-1].lstrip())
                 if attr_dict == -1:
-                    print("** invalid format for dictionary representation **")
+                    print("** invalid format for dictionary \
+                          representation **")
                     return
-                for key, value in attr_dict.items():
-                    update_message = "{} {} {} {}".format(class_name,
-                                                          id_val,
-                                                          str(key),
-                                                          value)
-                    print(update_message)
-                    self.do_update(update_message)
-            elif "{" not in command:
+                update_message = "{} {} {}".format(
+                    class_name,
+                    id_val,
+                    attr_dict)
+                print(update_message)
+                self.do_update(update_message)
+            elif command[-2] != "}" and "{" not in command:
                 arguments = command[7:-1].strip().split(",")
                 id_val = arguments[0][1:-1]
                 obj_attr_key = arguments[1]
                 obj_attr_value = arguments[2]
                 update_message = "{} {} {} {}".format(class_name,
                                                       id_val,
-                                                      obj_attr_key[2:-1],
+                                                      obj_attr_key[1:],
                                                       obj_attr_value)
                 self.do_update(update_message)
             else:
