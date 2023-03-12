@@ -55,5 +55,5 @@ class FileStorage:
                     cls = key.split(".")[0]
                     obj = eval(cls)(**value)
                     FileStorage.__objects[key] = obj
-        except (IOError, json.JSONDecodeError) as e:
-            pass
+        except (FileNotFoundError):
+            return
