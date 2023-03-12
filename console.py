@@ -154,18 +154,28 @@ class HBNBCommand(cmd.Cmd):
                 not_accepted = ["id", "created_at", "updated_at"]
                 obj = obj_dict[obj_key]
                 if args[2][0] == '{' and args[-1][-1] == '}':
-                    new_attrs = eval(" ".join(args[2:]))
+                    try:
+                        new_attrs = eval(" ".join(args[2:]))
+                    except (NameError, SyntaxError):
+                        print("*** Unknown syntax:", line)
                     if type(new_attrs) == dict:
                         for k, v in new_attrs.items():
-                            setattr(obj, k, v)
+                            if k in not_accepted:
+                                pass
+                            else:
+                                setattr(obj, k, v)
                         obj.save()
                     else:
-                        print("** invalid format for "
-                              "dictionary representation **")
+                        print("*** Unknown syntax:", line)
                 else:
-                    attr_name = args[2][1:-1]
-                    attr_value = eval(args[3])
-                    if args[2] in not_accepted:
+                    attr_name = args[2]
+                    if args[2][0] == "\"" and args[2][-1] == "\"":
+                        attr_name = args[2][1:-1]
+                    try:
+                        attr_value = eval(args[3])
+                    except NameError:
+                        attr_value = eval("\"" + args[3] + "\"")
+                    if attr_name in not_accepted:
                         pass
                     else:
                         setattr(obj, attr_name, attr_value)
@@ -193,19 +203,14 @@ class HBNBCommand(cmd.Cmd):
             destroy_message = "{} {}".format(class_name, extracted_id)
             self.do_destroy(destroy_message)
         elif sep == '.' and command[:7] == "update(" and command[-1] == ")":
-            if command[-2] == "}" and "{" in command:
+            if command[-2:] == "})" and "{" in command:
                 obj_id, sep, attr_dict = command.strip().partition(",")
                 id_val = obj_id[8:-1]
-                attr_dict = eval(attr_dict[:-1].lstrip())
-                if attr_dict == -1:
-                    print("** invalid format for dictionary \
-                          representation **")
-                    return
+                attr_dict = attr_dict[:-1].lstrip()
                 update_message = "{} {} {}".format(
                     class_name,
                     id_val,
                     attr_dict)
-                print(update_message)
                 self.do_update(update_message)
             elif command[-2] != "}" and "{" not in command:
                 arguments = command[7:-1].strip().split(",")
