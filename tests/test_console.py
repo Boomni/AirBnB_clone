@@ -55,11 +55,19 @@ class TestConsole(unittest.TestCase):
         self.assertIn("Updates an instance based on the class name and id", f.getvalue())
 
     def test_do_create(self):
+        """Tests create command"""
+        with patch('sys.stdout', new=StringIO()) as f:
+            HBNBCommand().onecmd("create")
+            self.assertIn(f.getvalue().strip(), "** class name missing **")
+        with patch('sys.stdout', new=StringIO()) as f:
+            HBNBCommand().onecmd("create new")
+            self.assertIn(f.getvalue().strip(), "** class doesn't exist **")
         with patch('sys.stdout', new=StringIO()) as f:
             HBNBCommand().onecmd("create BaseModel")
             self.assertRegex(f.getvalue(), r'\w{8}-\w{4}-\w{4}-\w{4}-\w{12}')
 
     def test_show(self):
+        """Tests show for all classes"""
         with patch('sys.stdout', new=StringIO()) as f:
             HBNBCommand().onecmd("create BaseModel")
             obj_id = f.getvalue().strip()
