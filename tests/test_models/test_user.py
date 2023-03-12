@@ -35,12 +35,16 @@ class TestUser(unittest.TestCase):
         self.assertEqual(str(self.user), expected)
 
     def test_user_to_dict_method(self):
+        self.user.email = "me@yahoo.com"
+        self.user.password = "my password"
+        self.user.first_name = "Boomni"
+        self.user.last_name = "Jonathan"
         dict_representation = self.user.to_dict()
         self.assertIsInstance(dict_representation, dict)
-        self.assertEqual(dict_representation["email"], "")
-        self.assertEqual(dict_representation["password"], "")
-        self.assertEqual(dict_representation["first_name"], "")
-        self.assertEqual(dict_representation["last_name"], "")
+        self.assertEqual(dict_representation["email"], "me@yahoo.com")
+        self.assertEqual(dict_representation["password"], "my password")
+        self.assertEqual(dict_representation["first_name"], "Boomni")
+        self.assertEqual(dict_representation["last_name"], "Jonathan")
         self.assertEqual(dict_representation["__class__"], "User")
         self.assertTrue("id" in dict_representation)
         self.assertTrue("created_at" in dict_representation)

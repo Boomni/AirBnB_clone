@@ -102,8 +102,8 @@ class TestConsole(unittest.TestCase):
 
         with patch('sys.stdout', new=StringIO()) as f:
             HBNBCommand().onecmd("update BaseModel {}".format("1234"))
-            self.assertIn("** attribute name missing **", f.getvalue().strip())
+            self.assertIn("** no instance found **", f.getvalue().strip())
 
         with patch('sys.stdout', new=StringIO()) as f:
             HBNBCommand().onecmd("update BaseModel {} name".format("1234"))
-            self.assertIn("** value missing **", f.getvalue().strip())
+            self.assertIn("** no instance found **", f.getvalue().strip())
