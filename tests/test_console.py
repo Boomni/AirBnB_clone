@@ -1,22 +1,60 @@
 #!/usr/bin/env python3
+"""Module for TestHBNBCommand class."""
 import unittest
 from unittest.mock import patch
 from io import StringIO
 from console import HBNBCommand
+from models.engine.file_storage import FileStorage
+import unittest
+import datetime
+import sys
+import re
+import os
 
 
 class TestConsole(unittest.TestCase):
+    def setUp(self):
+        """Sets up test cases."""
+        if os.path.isfile("file.json"):
+            os.remove("file.json")
+
     def test_help(self):
+        """Tests the help command."""
         with patch('sys.stdout', new=StringIO()) as f:
             HBNBCommand().onecmd("help")
             self.assertIn("Documented commands (type help <topic>):", f.getvalue().strip())
+
+    def test_help_EOF(self):
+        """Tests the help command."""
+        with patch('sys.stdout', new=StringIO()) as f:
+            HBNBCommand().onecmd("help EOF")
+        self.assertIn("EOF command to exit the program", f.getvalue())
+
+    def test_help_all(self):
+        """Tests the help command."""
+        with patch('sys.stdout', new=StringIO()) as f:
+            HBNBCommand().onecmd("help all")
+        self.assertIn("Prints all string representation of all instances", f.getvalue())
+
+    def test_help_count(self):
+        """Tests the help command."""
+        with patch('sys.stdout', new=StringIO()) as f:
+            HBNBCommand().onecmd("help count")
+        self.assertIn("Retrieve the number of instances of a class", f.getvalue())
+
 
     def test_help_quit(self):
         with patch('sys.stdout', new=StringIO()) as f:
             HBNBCommand().onecmd("help quit")
             self.assertIn("Quit command to exit the program", f.getvalue().strip())
 
-    def test_create(self):
+    def test_help_update(self):
+        """Tests the help command."""
+        with patch('sys.stdout', new=StringIO()) as f:
+            HBNBCommand().onecmd("help update")
+        self.assertIn("Updates an instance based on the class name and id", f.getvalue())
+
+    def test_do_create(self):
         with patch('sys.stdout', new=StringIO()) as f:
             HBNBCommand().onecmd("create BaseModel")
             self.assertRegex(f.getvalue(), r'\w{8}-\w{4}-\w{4}-\w{4}-\w{12}')
