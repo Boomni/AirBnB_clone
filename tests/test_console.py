@@ -662,7 +662,7 @@ class TestConsole(unittest.TestCase):
             HBNBCommand().onecmd(f"User.update({model_id})")
         self.assertEqual(f.getvalue(), '** attribute name missing **\n')
         with patch('sys.stdout', new=StringIO()) as f:
-            HBNBCommand().onecmd(f"User.update({model_id}, first)")
+            HBNBCommand().onecmd(f"User.update(\"{model_id}\", first)")
         self.assertEqual(f.getvalue(), '** value missing **\n')
         with patch('sys.stdout', new=StringIO()) as f:
             HBNBCommand().onecmd(f"User.update({model_id}, first, 3)")

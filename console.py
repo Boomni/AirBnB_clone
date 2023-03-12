@@ -203,7 +203,9 @@ class HBNBCommand(cmd.Cmd):
             destroy_message = "{} {}".format(class_name, extracted_id)
             self.do_destroy(destroy_message)
         elif sep == '.' and command[:7] == "update(" and command[-1] == ")":
-            if command[-2:] == "})" and "{" in command:
+            if command == "update()":
+                print("** instance id missing **")
+            elif command[-2:] == "})" and "{" in command:
                 obj_id, sep, attr_dict = command.strip().partition(",")
                 id_val = obj_id[8:-1]
                 attr_dict = attr_dict[:-1].lstrip()
@@ -215,13 +217,16 @@ class HBNBCommand(cmd.Cmd):
             elif command[-2] != "}" and "{" not in command:
                 arguments = command[7:-1].strip().split(",")
                 id_val = arguments[0][1:-1]
-                obj_attr_key = arguments[1]
-                obj_attr_value = arguments[2]
-                update_message = "{} {} {} {}".format(class_name,
-                                                      id_val,
-                                                      obj_attr_key[1:],
-                                                      obj_attr_value)
-                self.do_update(update_message)
+                try:
+                    obj_attr_key = arguments[1]
+                    obj_attr_value = arguments[2]
+                    update_message = "{} {} {} {}".format(class_name,
+                                                          id_val,
+                                                          obj_attr_key[1:],
+                                                          obj_attr_value)
+                    self.do_update(update_message)
+                except IndexError:
+                    print("** attribute name missing **")
             else:
                 print('*** Unknown syntax:', line)
         else:
