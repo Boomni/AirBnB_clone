@@ -65,18 +65,6 @@ class TestConsole(unittest.TestCase):
             HBNBCommand().onecmd("destroy BaseModel 1234")
             self.assertIn("** no instance found **", f.getvalue().strip())
 
-    def test_all(self):
-        with patch('sys.stdout', new=StringIO()) as f:
-            HBNBCommand().onecmd("create BaseModel")
-        with patch('sys.stdout', new=StringIO()) as f:
-            HBNBCommand().onecmd("all")
-            self.assertIn("[BaseModel]", f.getvalue().strip())
-
-    def test_all_error(self):
-        with patch('sys.stdout', new=StringIO()) as f:
-            HBNBCommand().onecmd("all MyModel")
-            self.assertIn("** class doesn't exist **", f.getvalue().strip())
-
     def test_update(self):
         with patch('sys.stdout', new=StringIO()) as f:
             HBNBCommand().onecmd("create BaseModel")
@@ -107,3 +95,41 @@ class TestConsole(unittest.TestCase):
         with patch('sys.stdout', new=StringIO()) as f:
             HBNBCommand().onecmd("update BaseModel {} name".format("1234"))
             self.assertIn("** no instance found **", f.getvalue().strip())
+
+    def test_all_class(self):
+        with patch('sys.stdout', new=StringIO()) as f:
+            HBNBCommand().onecmd("create BaseModel")
+        with patch('sys.stdout', new=StringIO()) as f:
+            HBNBCommand().onecmd("all BaseModel")
+            self.assertIn("[BaseModel]", f.getvalue().strip())
+
+    def test_destroy_valid(self):
+        with patch('sys.stdout', new=StringIO()) as f:
+            HBNBCommand().onecmd("create BaseModel")
+            obj_id = f.getvalue().strip()
+        with patch('sys.stdout', new=StringIO()) as f:
+            HBNBCommand().onecmd("destroy BaseModel {}".format(obj_id))
+        with patch('sys.stdout', new=StringIO()) as f:
+            HBNBCommand().onecmd("show BaseModel {}".format(obj_id))
+            self.assertIn("** no instance found **", f.getvalue().strip())
+    def test_destroy_invalid_class(self):
+        with patch('sys.stdout', new=StringIO()) as f:
+            HBNBCommand().onecmd("destroy MyModel 1234")
+            self.assertIn("** class doesn't exist **", f.getvalue().strip())
+    def test_destroy_invalid_id(self):
+        with patch('sys.stdout', new=StringIO()) as f:
+            HBNBCommand().onecmd("destroy BaseModel 1234")
+            self.assertIn("** no instance found **", f.getvalue().strip())
+    def test_update_valid(self):
+        with patch('sys.stdout', new=StringIO()) as f:
+            HBNBCommand().onecmd("create BaseModel")
+            obj_id = f.getvalue().strip()
+        with patch('sys.stdout', new=StringIO()) as f:
+            HBNBCommand().onecmd("update BaseModel {} name 'test'".format(obj_id))
+        with patch('sys.stdout', new=StringIO()) as f:
+            HBNBCommand().onecmd("show BaseModel {}".format(obj_id))
+            self.assertIn("'name': 'test'", f.getvalue().strip())
+    def test_update_invalid_class(self):
+        with patch('sys.stdout', new=StringIO()) as f:
+            HBNBCommand().onecmd("update MyModel 1234 name 'test'")
+            self.assertIn("** class doesn't exist **", f.getvalue().strip())
