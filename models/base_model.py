@@ -71,5 +71,6 @@ class BaseModel:
         """
         Returns a list of all instances of the current class
         """
+        from models import storage
         obj_dict = storage.all()
         return [obj for obj in obj_dict.values() if isinstance(obj, cls)]
