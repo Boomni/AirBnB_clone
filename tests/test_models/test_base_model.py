@@ -25,7 +25,8 @@ class TestBaseModel(unittest.TestCase):
         self.assertTrue(len(models.base_model.__doc__) > 0)
 
     def test_init(self):
-        """Test if no arguments passed, id, created_at and updated_at exists & are valid"""
+        """Test if no arguments passed,
+        id, created_at and updated_at exists & are valid"""
         self.assertTrue(len(self.bm.__init__.__doc__) > 0)
         self.assertTrue(hasattr(self.bm, "id"))
         self.assertTrue(hasattr(self.bm, "created_at"))

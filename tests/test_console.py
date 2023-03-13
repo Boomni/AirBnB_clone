@@ -22,7 +22,7 @@ class TestConsole(unittest.TestCase):
         """Tests the help command."""
         with patch('sys.stdout', new=StringIO()) as f:
             HBNBCommand().onecmd("help")
-            self.assertIn("Documented commands (type help <topic>):", f.getvalue().strip())
+            self.assertIn("Documented commands", f.getvalue().strip())
 
     def test_help_EOF(self):
         """Tests the help command."""
@@ -34,25 +34,24 @@ class TestConsole(unittest.TestCase):
         """Tests the help command."""
         with patch('sys.stdout', new=StringIO()) as f:
             HBNBCommand().onecmd("help all")
-        self.assertIn("Prints all string representation of all instances", f.getvalue())
+        self.assertIn("Prints all string representation", f.getvalue())
 
     def test_help_count(self):
         """Tests the help command."""
         with patch('sys.stdout', new=StringIO()) as f:
             HBNBCommand().onecmd("help count")
-        self.assertIn("Retrieve the number of instances of a class", f.getvalue())
-
+        self.assertIn("Retrieve the number of instances", f.getvalue())
 
     def test_help_quit(self):
         with patch('sys.stdout', new=StringIO()) as f:
             HBNBCommand().onecmd("help quit")
-            self.assertIn("Quit command to exit the program", f.getvalue().strip())
+            self.assertIn("Quit command to exit", f.getvalue().strip())
 
     def test_help_update(self):
         """Tests the help command."""
         with patch('sys.stdout', new=StringIO()) as f:
             HBNBCommand().onecmd("help update")
-        self.assertIn("Updates an instance based on the class name and id", f.getvalue())
+        self.assertIn("Updates an instance based", f.getvalue())
 
     def test_do_create(self):
         """Tests create command"""
@@ -116,7 +115,7 @@ class TestConsole(unittest.TestCase):
             HBNBCommand().onecmd("create BaseModel")
             obj_id = f.getvalue().strip()
         with patch('sys.stdout', new=StringIO()) as f:
-            HBNBCommand().onecmd("update BaseModel {} name 'test'".format(obj_id))
+            HBNBCommand().onecmd(f"update BaseModel {obj_id} name 'test'")
         with patch('sys.stdout', new=StringIO()) as f:
             HBNBCommand().onecmd("show BaseModel {}".format(obj_id))
             self.assertIn("'name': 'test'", f.getvalue().strip())
@@ -158,23 +157,27 @@ class TestConsole(unittest.TestCase):
         with patch('sys.stdout', new=StringIO()) as f:
             HBNBCommand().onecmd("show BaseModel {}".format(obj_id))
             self.assertIn("** no instance found **", f.getvalue().strip())
+
     def test_destroy_invalid_class(self):
         with patch('sys.stdout', new=StringIO()) as f:
             HBNBCommand().onecmd("destroy MyModel 1234")
             self.assertIn("** class doesn't exist **", f.getvalue().strip())
+
     def test_destroy_invalid_id(self):
         with patch('sys.stdout', new=StringIO()) as f:
             HBNBCommand().onecmd("destroy BaseModel 1234")
             self.assertIn("** no instance found **", f.getvalue().strip())
+
     def test_update_valid(self):
         with patch('sys.stdout', new=StringIO()) as f:
             HBNBCommand().onecmd("create BaseModel")
             obj_id = f.getvalue().strip()
         with patch('sys.stdout', new=StringIO()) as f:
-            HBNBCommand().onecmd("update BaseModel {} name 'test'".format(obj_id))
+            HBNBCommand().onecmd(f"update BaseModel {obj_id} name 'test'")
         with patch('sys.stdout', new=StringIO()) as f:
             HBNBCommand().onecmd("show BaseModel {}".format(obj_id))
             self.assertIn("'name': 'test'", f.getvalue().strip())
+
     def test_update_invalid_class(self):
         with patch('sys.stdout', new=StringIO()) as f:
             HBNBCommand().onecmd("update MyModel 1234 name 'test'")
@@ -183,7 +186,7 @@ class TestConsole(unittest.TestCase):
     def test_help(self):
         with patch('sys.stdout', new=StringIO()) as f:
             HBNBCommand().onecmd("help show")
-        self.assertIn('Prints the string representation of an instance\n', f.getvalue())
+        self.assertIn('Prints the string representation', f.getvalue())
         with patch('sys.stdout', new=StringIO()) as f:
             HBNBCommand().onecmd("help create")
         self.assertIn('Creates a new instance of the class', f.getvalue())
@@ -642,7 +645,8 @@ class TestConsole(unittest.TestCase):
         self.assertIn('first', f.getvalue())
         """
         with patch('sys.stdout', new=StringIO()) as f:
-            HBNBCommand().onecmd(f"BaseModel.update(\"{model_id}\", {'second': 5, 'third': three})")
+            HBNBCommand().onecmd(f"BaseModel.update(\"{model_id}\",
+            {'second': 5, 'third': three})")
         with patch('sys.stdout', new=StringIO()) as f:
             HBNBCommand().onecmd(f"BaseModel.show(\"{model_id}\")")
         self.assertIn('third', f.getvalue())
@@ -673,7 +677,8 @@ class TestConsole(unittest.TestCase):
         self.assertIn('first', f.getvalue())
         """
         with patch('sys.stdout', new=StringIO()) as f:
-            HBNBCommand().onecmd(f"User.update(\"{model_id}\", {'second': 5, 'third': three})")
+            HBNBCommand().onecmd(f"User.update(\"{model_id}\",
+            {'second': 5, 'third': three})")
         with patch('sys.stdout', new=StringIO()) as f:
             HBNBCommand().onecmd(f"User.show(\"{model_id}\")")
         self.assertIn('third', f.getvalue())
@@ -704,7 +709,8 @@ class TestConsole(unittest.TestCase):
         self.assertIn('first', f.getvalue())
         """
         with patch('sys.stdout', new=StringIO()) as f:
-            HBNBCommand().onecmd(f"Place.update(\"{model_id}\", {'second': 5, 'third': three})")
+            HBNBCommand().onecmd(f"Place.update(\"{model_id}\",
+            {'second': 5, 'third': three})")
         with patch('sys.stdout', new=StringIO()) as f:
             HBNBCommand().onecmd(f"Place.show(\"{model_id}\")")
         self.assertIn('third', f.getvalue())
@@ -735,7 +741,8 @@ class TestConsole(unittest.TestCase):
         self.assertIn('first', f.getvalue())
         """
         with patch('sys.stdout', new=StringIO()) as f:
-            HBNBCommand().onecmd(f"State.update(\"{model_id}\", {'second': 5, 'third': three})")
+            HBNBCommand().onecmd(f"State.update(\"{model_id}\",
+            {'second': 5, 'third': three})")
         with patch('sys.stdout', new=StringIO()) as f:
             HBNBCommand().onecmd(f"State.show(\"{model_id}\")")
         self.assertIn('third', f.getvalue())
@@ -766,7 +773,8 @@ class TestConsole(unittest.TestCase):
         self.assertIn('first', f.getvalue())
         """
         with patch('sys.stdout', new=StringIO()) as f:
-            HBNBCommand().onecmd(f"City.update(\"{model_id}\", {'second': 5, 'third': three})")
+            HBNBCommand().onecmd(f"City.update(\"{model_id}\",
+            {'second': 5, 'third': three})")
         with patch('sys.stdout', new=StringIO()) as f:
             HBNBCommand().onecmd(f"City.show(\"{model_id}\")")
         self.assertIn('third', f.getvalue())
@@ -797,7 +805,8 @@ class TestConsole(unittest.TestCase):
         self.assertIn('first', f.getvalue())
         """
         with patch('sys.stdout', new=StringIO()) as f:
-            HBNBCommand().onecmd(f"Amenity.update(\"{model_id}\", {'second': 5, 'third': three})")
+            HBNBCommand().onecmd(f"Amenity.update(\"{model_id}\",
+            {'second': 5, 'third': three})")
         with patch('sys.stdout', new=StringIO()) as f:
             HBNBCommand().onecmd(f"Amenity.show(\"{model_id}\")")
         self.assertIn('third', f.getvalue())
@@ -828,7 +837,8 @@ class TestConsole(unittest.TestCase):
         self.assertIn('first', f.getvalue())
         """
         with patch('sys.stdout', new=StringIO()) as f:
-            HBNBCommand().onecmd(f"Review.update(\"{model_id}\", {'second': 5, 'third': three})")
+            HBNBCommand().onecmd(f"Review.update(\"{model_id}\",
+            {'second': 5, 'third': three})")
         with patch('sys.stdout', new=StringIO()) as f:
             HBNBCommand().onecmd(f"Review.show(\"{model_id}\")")
         self.assertIn('third', f.getvalue())
