@@ -157,7 +157,8 @@ class HBNBCommand(cmd.Cmd):
                     try:
                         new_attrs = eval(" ".join(args[2:]))
                     except (NameError, SyntaxError):
-                        print("*** Unknown syntax:", line)
+                        print("*** Unknown syntax:", arg)
+                        return
                     if type(new_attrs) == dict:
                         for k, v in new_attrs.items():
                             if k in not_accepted:
@@ -219,6 +220,10 @@ class HBNBCommand(cmd.Cmd):
                 id_val = arguments[0][1:-1]
                 try:
                     obj_attr_key = arguments[1]
+                except IndexError:
+                    print("** attribute name missing **")
+                    return
+                try:
                     obj_attr_value = arguments[2]
                     update_message = "{} {} {} {}".format(class_name,
                                                           id_val,
@@ -226,7 +231,8 @@ class HBNBCommand(cmd.Cmd):
                                                           obj_attr_value)
                     self.do_update(update_message)
                 except IndexError:
-                    print("** attribute name missing **")
+                    print("** value missing **")
+                    return
             else:
                 print('*** Unknown syntax:', line)
         else:
