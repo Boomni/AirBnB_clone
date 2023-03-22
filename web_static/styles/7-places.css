@@ -64,25 +64,24 @@ ul.popover li {
 	list-style-type: none;
 }
 section.places {
-    display: flex;
-    flex-flow: row wrap;
-    justify-content: space-evenly;
-    position: absolute;
 }
-
 section.places h1 {
 	text-align: top left;
-	height: 90%;
 	font-size: 30px;
-	padding: 30px;
 }
-
 article {
-    width: 390px;
-    padding: 20px;
-    margin: 20px;
-    border: 1px solid #FF5A5F;
-    border-radius: 4px;
-    font-size: 30px;
-    text-align: center;
+	width: 390px;
+	padding: 20px;
+	margin: 20px;
+	border: 1px solid #FF5A5F;
+	border-radius: 4px;
+}
+div.articles {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: center;
+}
+article.h2 {
+	font-size: 30px;
+	text-align: center;
 }
