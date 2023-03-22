@@ -66,7 +66,7 @@ ul.popover li {
 section.places {
 }
 section.places h1 {
-	text-align: top left;
+	text-align: left;
 	font-size: 30px;
 }
 article {
@@ -81,7 +81,7 @@ div.articles {
 	flex-wrap: wrap;
 	justify-content: center;
 }
-article.h2 {
+article h2 {
 	font-size: 30px;
 	text-align: center;
 }
