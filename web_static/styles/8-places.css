@@ -136,3 +136,11 @@ div.articles {
 .max_guest span, .number_rooms span, .number_bathrooms span {
 	margin-top: 50px;
 }
+.user {
+	margin-top: 20px;
+}
+.description {
+	margin-top: 20px;
+}
+.user span {
+}
