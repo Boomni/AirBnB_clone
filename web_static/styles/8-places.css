@@ -138,9 +138,10 @@ div.articles {
 }
 .user {
 	margin-top: 20px;
+	display: flex;
+	height: 10px;
+	width: 100%;
 }
 .description {
 	margin-top: 20px;
-}
-.user span {
 }
