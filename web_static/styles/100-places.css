@@ -147,6 +147,7 @@ div.articles {
 }
 .amenities ul {
 	list-style: none;
+	width: 100%
 }
 .amenities .tv:before {
 	content: "";
@@ -174,4 +175,23 @@ div.articles {
 	margin-right: 10px;
 	background-image: url(../images/icon_pets.png);
 	background-size: contain;
+}
+.reviews {
+	width: 100%;
+}
+.reviews ul {
+	list-style: none;
+}
+.amenities h2, .reviews h2 {
+	font-size: 16px;
+	border-bottom: 1px solid #DDDDDD;
+}
+.reviews h3 {
+	font-size: 14px;
+	margin-bottom: auto;
+}
+.reviews p {
+	font-size: 12px;
+	margin-top: auto;
+	color: #484848;
 }
