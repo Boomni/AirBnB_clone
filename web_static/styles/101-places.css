@@ -145,9 +145,10 @@ div.articles {
 .description {
 	margin-top: 20px;
 }
-.amenities ul {
+.amenities .list_of_amenities {
 	list-style: none;
-	width: 100%
+	width: 100%;
+	display: contents;
 }
 .amenities .tv:before {
 	content: "";
@@ -179,8 +180,9 @@ div.articles {
 .reviews {
 	width: 100%;
 }
-.reviews ul {
+.reviews .list_of_reviews {
 	list-style: none;
+	display: contents;
 }
 .amenities h2, .reviews h2 {
 	font-size: 16px;
@@ -194,4 +196,8 @@ div.articles {
 	font-size: 12px;
 	margin-top: auto;
 	color: #484848;
+}
+.places {
+	display: flex;
+	flex-direction: column;
 }
